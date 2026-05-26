@@ -1,119 +1,68 @@
-╔══════════════════════════════════════════════════════════════════════╗
-║         🏥 Week 8 Clinical ML Deployment API — Quick Start          ║
-╚══════════════════════════════════════════════════════════════════════╝
+FASTAPI MODEL SERVER — QUICK START
+═══════════════════════════════════
 
-WHAT IS THIS?
-─────────────
-A real FastAPI that wraps your trained XGBoost readmission model.
-Clinicians use APIs (not Jupyter notebooks) to get predictions.
+INSTALL & RUN (2 minutes)
+─────────────────────────
+uv sync
+python create_test_model.py    # If no model file exists
+uv run uvicorn app:app --port 9000
 
+ENDPOINTS
+──────────
+GET  /docs                      Interactive API docs (Swagger)
+GET  /health                    Health check
+GET  /model/features            Feature importance
+POST /predictions               Single prediction
+POST /predictions/batch         Batch predictions (≤50)
+GET  /metrics                   Request stats
 
-3-STEP STARTUP
-──────────────
+MAKE A PREDICTION
+──────────────────
+curl -X POST http://localhost:9000/predictions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "age": "[60-70)",
+    "num_medications": 16,
+    "num_lab_procedures": 41,
+    "num_procedures": 6,
+    "number_diagnoses": 9,
+    "time_in_hospital": 3,
+    "insulin": "Yes",
+    "change": "No",
+    "diabetesMed": "Yes"
+  }'
 
-1. INSTALL (one-time)
-   cd week_eight/notebooks
-   uv add fastapi "uvicorn[standard]"
-
-2. START SERVER (in terminal 1)
-   uv run uvicorn app:app --port 9000
-
-3. TRY IT (in terminal 2)
-   uv run python demo_client.py
-
-   OR visit these URLs in your browser:
-   • http://localhost:9000          (landing page, explains APIs)
-   • http://localhost:9000/docs     (Swagger UI — interactive testing)
-   • http://localhost:9000/redoc    (ReDoc — formatted docs)
-
-
-WHAT CAN YOU DO?
-────────────────
-
-Make a single prediction:
-  curl -X POST http://localhost:9000/predictions \
-    -H "Content-Type: application/json" \
-    -d '{"age":"[60-70)","num_medications":16,...}'
-
-Predict 50 patients at once:
-  curl -X POST http://localhost:9000/predictions/batch \
-    -H "Content-Type: application/json" \
-    -d '{"patients":[...]}'
-
-Check if model is ready:
-  curl http://localhost:9000/health
-
-See which features matter most:
-  curl http://localhost:9000/model/features
-
-Get random test patient:
-  curl http://localhost:9000/patients/sample
-
+PYTHON CLIENT
+───────────────
+import requests
+resp = requests.post(
+    "http://localhost:9000/predictions",
+    json={
+        "age": "[60-70)",
+        "num_medications": 16,
+        ...
+    }
+)
+print(resp.json())
 
 FILES
-─────
-app.py                     ← The API server (don't edit to start)
-demo_client.py             ← Shows 4 ways to call the API
-API_README.md              ← Complete documentation
-DEPLOYMENT_API_GUIDE.md    ← For instructors
-
-
-THE BIG IDEA
-────────────
-Your model is trained. Now clinicians need to use it.
-
-❌ They can't load your notebook (no Python, no permissions)
-❌ They can't SSH into your computer
-❌ Predictions must be logged and auditable
-
-✅ An API solves this: clinician sends JSON → server returns prediction
-
-That's deployment. That's this app.
-
+──────
+app.py                  FastAPI server
+demo_client.py          Example clients (4 patterns)
+create_test_model.py    Generate test model
+pyproject.toml          Dependencies
+uv.lock                 Locked versions
+README.md               Full documentation
 
 TROUBLESHOOTING
-───────────────
-"Port 9000 is in use"
-→ Use a different port: uv run uvicorn app:app --port 9001
+────────────────
+Model not found?
+→ python create_test_model.py
 
-"ModuleNotFoundError: fastapi"
-→ Install: uv add fastapi "uvicorn[standard]"
+Port in use?
+→ uv run uvicorn app:app --port 9001
 
-"FileNotFoundError: readmission_pipeline.joblib"
-→ Run week8_mon_full_pipeline.ipynb first to train the model
+No fastapi?
+→ uv sync
 
-Server won't start?
-→ Check: does the model file exist?
-   ls ../data/readmission_pipeline.joblib
-
-
-NEXT STEPS
-──────────
-1. Run the server and play with endpoints
-2. Read API_README.md to understand the design
-3. Try modifying app.py (e.g., add new endpoint)
-4. Extend it: add authentication, database, monitoring
-
-
-LEARN MORE
-──────────
-What is an API?
-  → Visit http://localhost:9000/ (landing page)
-
-How does the API code work?
-  → Read app.py (it's well-commented)
-
-How do real clinicians use this?
-  → Look at demo_client.py (shows 4 real scenarios)
-
-How would you deploy this for real?
-  → See DEPLOYMENT_API_GUIDE.md
-
-
-REMEMBER
-────────
-You just transformed a notebook into a production service.
-
-That's not trivial. That's the last mile.
-
-Welcome to deployment. 🚀
+Full docs: README.md
