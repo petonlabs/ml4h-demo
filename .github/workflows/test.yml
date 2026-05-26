@@ -19,6 +19,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
+      - name: Generate test model
+        run: uv run python create_test_model.py
+
       - name: Check imports
         run: uv run python -c "import app; print('✅ app.py imports successfully')"
 

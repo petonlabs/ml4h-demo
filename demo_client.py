@@ -82,17 +82,17 @@ def demo_1_direct_python():
         "\nWhen you'd use this: Testing, internal tools, zero network overhead.\n"
     )
 
-    model = get_model_service()
+    get_model_service()
     service = get_prediction_service()
 
-    print(f"Patient: Wanjiku (67 y/o, high-risk profile)")
+    print("Patient: Wanjiku (67 y/o, high-risk profile)")
     print(f"  Medications: {SAMPLE_1.num_medications}")
     print(f"  Lab procedures: {SAMPLE_1.num_lab_procedures}")
     print(f"  Time in hospital: {SAMPLE_1.time_in_hospital} days\n")
 
     result = service.predict_single(SAMPLE_1)
 
-    print(f"✅ Result (instant, no network):")
+    print("✅ Result (instant, no network):")
     print(f"  Risk Level: {result.risk_level}")
     print(f"  Probability: {result.readmission_probability:.1%}")
     print(f"  Model: {result.model_version}")
@@ -113,12 +113,12 @@ def demo_2_http_single():
     url = "http://localhost:9000/predictions"
     payload = SAMPLE_2.model_dump()
 
-    print(f"Patient: Mwangi (52 y/o, low-risk profile)")
+    print("Patient: Mwangi (52 y/o, low-risk profile)")
     print(f"  Medications: {SAMPLE_2.num_medications}")
     print(f"  Lab procedures: {SAMPLE_2.num_lab_procedures}")
     print(f"  Time in hospital: {SAMPLE_2.time_in_hospital} day\n")
 
-    print(f"HTTP Request:")
+    print("HTTP Request:")
     print(f"  POST {url}")
     print(f"  Body: {json.dumps(payload, indent=4)}\n")
 
@@ -127,7 +127,7 @@ def demo_2_http_single():
         response.raise_for_status()
         result = response.json()
 
-        print(f"✅ HTTP 201 Created:")
+        print("✅ HTTP 201 Created:")
         print(f"  Risk Level: {result['risk_level']}")
         print(f"  Probability: {result['readmission_probability']:.1%}")
         print(f"  Timestamp: {result['timestamp']}")
@@ -162,26 +162,26 @@ def demo_3_batch():
         ]
     }
 
-    print(f"Patients:")
-    print(f"  1. Wanjiku (67 y/o)")
-    print(f"  2. Mwangi (52 y/o)")
-    print(f"  3. Kamau (78 y/o)\n")
+    print("Patients:")
+    print("  1. Wanjiku (67 y/o)")
+    print("  2. Mwangi (52 y/o)")
+    print("  3. Kamau (78 y/o)\n")
 
-    print(f"HTTP Request:")
+    print("HTTP Request:")
     print(f"  POST {url}")
-    print(f"  Body: 3 patient records\n")
+    print("  Body: 3 patient records\n")
 
     try:
         response = requests.post(url, json=batch_payload, timeout=5)
         response.raise_for_status()
         result = response.json()
 
-        print(f"✅ HTTP 201 Created:")
+        print("✅ HTTP 201 Created:")
         print(f"  Total predictions: {result['total']}")
         print(f"  High-risk count: {result['high_risk_count']}")
         print(f"  High-risk %: {result['high_risk_percentage']:.1f}%\n")
 
-        print(f"Individual Results:")
+        print("Individual Results:")
         for i, pred in enumerate(result["results"], 1):
             print(
                 f"  {i}. {pred['risk_level']:12} "

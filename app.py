@@ -21,8 +21,6 @@ DESIGN: SOLID principles in a single file
   - Abstract base (Open/Closed): swappable model implementations
 """
 
-import os
-import json
 import random
 from abc import ABC, abstractmethod
 from datetime import datetime
