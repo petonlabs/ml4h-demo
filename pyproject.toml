@@ -1,0 +1,20 @@
+[project]
+name = "clinical-ml-api"
+version = "1.0.0"
+description = "FastAPI deployment for Week 8 Clinical ML readmission prediction"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Wechuli Simiyu", email = "wechuli@petonlabs.com"},
+]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.136.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.10.0",
+    "joblib>=1.4.0",
+    "pandas>=2.2.0",
+    "scikit-learn>=1.6.0",
+    "xgboost>=2.1.0",
+    "requests>=2.31.0",
+]
